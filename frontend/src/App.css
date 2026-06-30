@@ -1,0 +1,394 @@
+﻿/* ─── Layout shell ───────────────────────────────────────────── */
+.calculator-shell {
+  display: grid;
+  grid-template-columns: 420px 1fr;
+  gap: 24px;
+  padding: 40px 32px;
+  min-height: 100vh;
+  align-items: start;
+}
+
+/* ─── Shared glass card ──────────────────────────────────────── */
+.calculator-card,
+.history-panel {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+  border-radius: 24px;
+  padding: 28px;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+/* ─── Calculator header ──────────────────────────────────────── */
+.calculator-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.calculator-header h1 {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.3px;
+}
+
+.calculator-header p {
+  margin-top: 4px;
+  color: var(--text-secondary);
+  font-size: 12px;
+}
+
+/* ─── Status pill ────────────────────────────────────────────── */
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: var(--utility-bg);
+  border: 1px solid var(--glass-border);
+  color: var(--utility-color);
+  font-weight: 600;
+  font-size: 12px;
+  white-space: nowrap;
+  transition: background 0.3s;
+}
+
+.status-pill::before {
+  content: '';
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 6px var(--accent-glow);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: 0.5; transform: scale(0.85); }
+}
+
+/* ─── Display ────────────────────────────────────────────────── */
+.calculator-display {
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
+  padding: 20px 20px 16px;
+  margin-bottom: 20px;
+  text-align: right;
+  min-height: 110px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  position: relative;
+  overflow: hidden;
+}
+
+.calculator-display::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(124,107,250,0.06) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+.calculator-expression {
+  color: var(--text-dim);
+  font-size: 13px;
+  margin-bottom: 6px;
+  min-height: 18px;
+  letter-spacing: 0.5px;
+}
+
+.calculator-value {
+  font-size: 42px;
+  font-weight: 800;
+  color: var(--text-primary);
+  word-break: break-all;
+  line-height: 1.1;
+  letter-spacing: -1px;
+  text-shadow: 0 0 30px rgba(124, 107, 250, 0.3);
+}
+
+/* ─── Button grid ────────────────────────────────────────────── */
+.calculator-buttons {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+}
+
+/* ─── Base button ────────────────────────────────────────────── */
+.button {
+  border: 1px solid var(--glass-border);
+  border-radius: 14px;
+  padding: 18px 10px;
+  font-size: 18px;
+  font-weight: 600;
+  cursor: pointer;
+  background: var(--number-bg);
+  color: var(--text-primary);
+  transition: background 0.18s, transform 0.1s, box-shadow 0.18s;
+  user-select: none;
+  position: relative;
+  overflow: hidden;
+}
+
+.button::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center, rgba(255,255,255,0.18) 0%, transparent 70%);
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.button:hover {
+  background: var(--number-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+.button:active {
+  transform: translateY(0px) scale(0.96);
+  box-shadow: none;
+}
+
+.button:active::after {
+  opacity: 1;
+}
+
+/* ─── Operator buttons ───────────────────────────────────────── */
+.button.operator {
+  background: var(--operator-bg);
+  border-color: rgba(124, 107, 250, 0.4);
+  color: #ffffff;
+  box-shadow: 0 4px 18px var(--accent-glow);
+}
+
+.button.operator:hover {
+  background: linear-gradient(135deg, var(--accent-hover), #7060e0);
+  box-shadow: 0 8px 28px var(--accent-glow);
+  transform: translateY(-2px);
+}
+
+/* ─── Utility buttons (C, DEL, %) ────────────────────────────── */
+.button.utility {
+  background: var(--utility-bg);
+  border-color: rgba(124, 107, 250, 0.2);
+  color: var(--utility-color);
+}
+
+.button.utility:hover {
+  background: rgba(124, 107, 250, 0.25);
+  color: #d4cfff;
+  transform: translateY(-2px);
+}
+
+/* ─── Span-two (zero button) ─────────────────────────────────── */
+.button.span-two {
+  grid-column: span 2;
+}
+
+/* ─── History panel ──────────────────────────────────────────── */
+.history-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-height: calc(100vh - 80px);
+  position: sticky;
+  top: 40px;
+}
+
+.history-header {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--glass-border);
+}
+
+.history-header h2 {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.history-header h2::before {
+  content: '🕓';
+  font-size: 15px;
+}
+
+.history-header p {
+  color: var(--text-secondary);
+  font-size: 12px;
+}
+
+/* ─── Scrollable history list ────────────────────────────────── */
+.history-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  overflow-y: auto;
+  padding-right: 4px;
+  flex: 1;
+}
+
+.history-list::-webkit-scrollbar {
+  width: 4px;
+}
+
+.history-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.history-list::-webkit-scrollbar-thumb {
+  background: var(--glass-border);
+  border-radius: 4px;
+}
+
+/* ─── History item ───────────────────────────────────────────── */
+.history-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--glass-border);
+  transition: background 0.2s, transform 0.15s;
+  animation: slideIn 0.25s ease both;
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.history-item:hover {
+  background: rgba(255, 255, 255, 0.07);
+  transform: translateX(3px);
+}
+
+.history-expression {
+  font-size: 12px;
+  color: var(--text-secondary);
+  letter-spacing: 0.3px;
+}
+
+.history-result {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.3px;
+}
+
+/* ─── Delete button ──────────────────────────────────────────── */
+.history-delete {
+  border: 1px solid rgba(255, 94, 94, 0.25);
+  background: var(--red-soft);
+  color: var(--red);
+  font-size: 11px;
+  font-weight: 700;
+  padding: 5px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.18s, border-color 0.18s, transform 0.1s;
+  flex-shrink: 0;
+}
+
+.history-delete:hover {
+  background: rgba(255, 94, 94, 0.22);
+  border-color: rgba(255, 94, 94, 0.5);
+  transform: scale(1.05);
+}
+
+.history-delete:active {
+  transform: scale(0.97);
+}
+
+/* ─── Empty state ────────────────────────────────────────────── */
+.history-empty {
+  padding: 40px 20px;
+  text-align: center;
+  color: var(--text-dim);
+  font-size: 14px;
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 14px;
+  border: 1px dashed var(--glass-border);
+  line-height: 1.7;
+}
+
+.history-empty::before {
+  content: '🧮';
+  display: block;
+  font-size: 32px;
+  margin-bottom: 10px;
+}
+
+/* ─── Error banner ───────────────────────────────────────────── */
+.history-error {
+  padding: 10px 14px;
+  border-radius: 10px;
+  background: var(--red-soft);
+  border: 1px solid rgba(255, 94, 94, 0.3);
+  color: var(--red);
+  font-size: 12px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.history-error::before {
+  content: '⚠';
+}
+
+/* ─── Responsive ─────────────────────────────────────────────── */
+@media (max-width: 900px) {
+  .calculator-shell {
+    grid-template-columns: 1fr;
+    padding: 20px 16px;
+    gap: 16px;
+  }
+
+  .history-panel {
+    position: static;
+    max-height: 400px;
+  }
+
+  .calculator-value {
+    font-size: 36px;
+  }
+}
+
+@media (max-width: 480px) {
+  .calculator-card,
+  .history-panel {
+    padding: 20px 16px;
+    border-radius: 20px;
+  }
+
+  .button {
+    padding: 16px 8px;
+    font-size: 16px;
+    border-radius: 12px;
+  }
+
+  .calculator-value {
+    font-size: 30px;
+  }
+
+  .calculator-buttons {
+    gap: 8px;
+  }
+}
